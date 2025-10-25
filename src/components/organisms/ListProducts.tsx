@@ -13,6 +13,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import type { RootState } from "../../store";
 import { clearProducts, removeProduct } from "../../store/productsSlice";
+import toast from "react-hot-toast";
 
 const ListProductsOrganism: React.FC = () => {
   const dispatch = useDispatch();
@@ -67,7 +68,10 @@ const ListProductsOrganism: React.FC = () => {
               <Tooltip title="Remover produto">
                 <IconButton
                   color="error"
-                  onClick={() => dispatch(removeProduct(p.name))}
+                  onClick={() => {
+                    dispatch(removeProduct(p.name));
+                    toast.success(`${p.name} removido`);
+                  }}
                   sx={{
                     "&:hover": {
                       backgroundColor: "rgba(255,0,0,0.08)",
@@ -95,7 +99,10 @@ const ListProductsOrganism: React.FC = () => {
 
           <Tooltip title="Limpar todos os produtos">
             <Button
-              onClick={() => dispatch(clearProducts())}
+              onClick={() =>  { 
+                dispatch(clearProducts());
+                toast.success("Lista limpa com sucesso!", { icon: "🧹" })
+              }}
               startIcon={<DeleteSweepIcon />}
               sx={{
                 textTransform: "none",
