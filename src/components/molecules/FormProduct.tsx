@@ -33,7 +33,7 @@ const FormProduct: React.FC = () => {
         <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
                 <Input label="Nome do produto" value={name} onChange={setName} />
-                <Input label="Preço" type="number" value={price} onChange={setPrice} />
+                <Input label="Preço" type="number" value={price} onChange={(v) => setPrice(v.replace(',', '.'))} />
                 <Input
                     label="Quantidade"
                     type="number"
