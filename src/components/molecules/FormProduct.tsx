@@ -2,7 +2,7 @@ import { Button, Stack } from "@mui/material";
 import { useState } from "react";
 import Input from "../atoms/Input";
 import { useDispatch } from "react-redux";
-import { addProduct } from "../../store/productsSlice"; // ajuste o caminho conforme sua estrutura
+// ajuste o caminho conforme sua estrutura
 import toast from "react-hot-toast";
 
 const FormProduct: React.FC = () => {
@@ -16,13 +16,22 @@ const FormProduct: React.FC = () => {
         e.preventDefault();
         if (!name || price === "" || quantity === "") return;
 
-        dispatch(
-            addProduct({
-                name,
-                price: Number(price),
-                quantity: Number(quantity),
-            })
-        );
+        const parsedPrice = parseFloat(price.toString().replace(',', '.'));
+        const parsedQuantity = parseInt(quantity.toString(), 10);
+
+
+        if (isNaN(parsedPrice) || isNaN(parsedQuantity)) {
+            toast.error("Preço ou quantidade inválidos!");
+            return;
+        }
+
+        // dispatch(
+        //     addProduct({
+        //         name,
+        //         price: parseFloat(parsedPrice.toFixed(2)),
+        //         quantity: parsedQuantity,
+        //     })
+        // );
         toast.success(`Produto "${name}" adicionado!`);
         setName("");
         setPrice("");

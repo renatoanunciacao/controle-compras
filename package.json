@@ -16,10 +16,13 @@
     "@mui/material": "^7.3.4",
     "@reduxjs/toolkit": "^2.9.2",
     "@tailwindcss/postcss": "^4.1.16",
+    "framer-motion": "^12.23.24",
+    "lottie-react": "^2.4.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hot-toast": "^2.6.0",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

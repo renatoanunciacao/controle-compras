@@ -12,16 +12,17 @@ import {
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import type { RootState } from "../../store";
-import { clearProducts, removeProduct } from "../../store/productsSlice";
+
 import toast from "react-hot-toast";
+import { clearCart, removeFromCart } from "../../store/productsSlice";
 
 const ListProductsOrganism: React.FC = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state: RootState) => state.products.items);
+  const productsCart = useSelector((state: RootState) => state.products.cart);
 
-  const total = products.reduce((acc, p) => acc + p.price * p.quantity, 0);
+  const total = productsCart.reduce((acc, p) => acc + p.price * p.quantity, 0);
 
-  if (products.length === 0)
+  if (productsCart.length === 0)
     return (
       <Typography mt={4} align="center" color="text.secondary">
         Nenhum produto adicionado ainda.
@@ -38,7 +39,7 @@ const ListProductsOrganism: React.FC = () => {
           background: "#fafafa",
         }}
       >
-        {products.map((p, i) => (
+        {productsCart.map((p, i) => (
           <Box
             key={i}
             display="flex"
@@ -69,7 +70,7 @@ const ListProductsOrganism: React.FC = () => {
                 <IconButton
                   color="error"
                   onClick={() => {
-                    dispatch(removeProduct(p.name));
+                    dispatch(removeFromCart(p.id));
                     toast.success(`${p.name} removido`);
                   }}
                   sx={{
@@ -100,7 +101,7 @@ const ListProductsOrganism: React.FC = () => {
           <Tooltip title="Limpar todos os produtos">
             <Button
               onClick={() =>  { 
-                dispatch(clearProducts());
+                dispatch(clearCart());
                 toast.success("Lista limpa com sucesso!", { icon: "🧹" })
               }}
               startIcon={<DeleteSweepIcon />}

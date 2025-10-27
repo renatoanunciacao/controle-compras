@@ -1,27 +1,39 @@
 import { configureStore } from "@reduxjs/toolkit";
 import productsReducer from "./productsSlice";
 
-// Carrega os dados do localStorage
+// Carrega o estado do localStorage
 const loadState = () => {
   try {
     const serializedState = localStorage.getItem("productsState");
-    if (serializedState === null) return undefined;
-    return JSON.parse(serializedState);
+    if (!serializedState) return undefined;
+    const parsed = JSON.parse(serializedState);
+
+    // Garantir que todas as propriedades existam
+    return {
+      items: parsed.items || [],
+      cart: parsed.cart || [],
+      filteredItems: parsed.filteredItems || [],
+      searchTerm: parsed.searchTerm || "",
+    };
   } catch {
     return undefined;
   }
 };
 
-// Salva os dados no localStorage
+// Salva estado no localStorage
 const saveState = (state: any) => {
   try {
-    const serializedState = JSON.stringify(state.products);
-    localStorage.setItem("productsState", serializedState);
+    localStorage.setItem("productsState", JSON.stringify(state.products));
   } catch {}
 };
 
 const preloadedState = {
-  products: loadState() || { items: [] },
+  products: loadState() || {
+    items: [],
+    cart: [],
+    filteredItems: [],
+    searchTerm: "",
+  },
 };
 
 export const store = configureStore({

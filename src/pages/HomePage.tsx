@@ -1,7 +1,7 @@
-import React from "react";
-import FormProduct from "../components/molecules/FormProduct";
-import ListProducts from "../components/organisms/ListProducts";
 import { Container, Typography } from "@mui/material";
+import React from "react";
+import SearchBar from "../components/molecules/SearchBar";
+import ListProductsOrganism from "../components/organisms/ListProducts";
 
 
 const HomePage: React.FC = () => {
@@ -10,8 +10,9 @@ const HomePage: React.FC = () => {
             <Typography variant="h4" align="center" gutterBottom>
                 Controle de Compras 🛒
             </Typography>
-            <FormProduct />
-            <ListProducts />
+            <SearchBar />
+            {/* <FormProduct /> */}
+            <ListProductsOrganism />
         </Container>
     );
 };
