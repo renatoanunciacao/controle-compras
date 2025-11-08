@@ -7,9 +7,10 @@ interface InputPros {
     type?: string;
     placeholder?: string;
     onChange: (value: string) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputPros> = ({ label, value, type, onChange, placeholder}) => {
+const Input: React.FC<InputPros> = ({ label, value, type, onChange, placeholder, onKeyDown }) => {
     return (
         <TextField
             label={label}
@@ -17,6 +18,7 @@ const Input: React.FC<InputPros> = ({ label, value, type, onChange, placeholder}
             value={value}
             placeholder={placeholder}
             onChange={(e) => onChange(e.target.value)}
+            onKeyDown={onKeyDown}
             fullWidth
             required
         />

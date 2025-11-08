@@ -1,46 +1,82 @@
 // organisms/CreateProductModal.tsx
-import { motion } from "framer-motion";
-import Lottie from "lottie-react";
+
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import successAnimation from "../../assets/success.json"; // animação exportada do LottieFiles
-import { addProductAndAddToCart } from "../../store/productsSlice";
+
 import Button from "../atoms/Button";
 import Input from "../atoms/Input";
-
+import Lottie from "lottie-react";
+import { addProductAndAddToCart, type Product } from "../../store/productsSlice";
+import { motion } from "framer-motion";
+import successAnimation from "../../assets/success.json";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../store";
 
 interface Props {
     isOpen: boolean;
     defaultName: string;
     onClose: () => void;
     onCreated?: () => void;
+    existingProduct?: Product;
+    isEditMode?: boolean;
 }
 
-const CreateProductModal: React.FC<Props> = ({ isOpen, defaultName, onClose, onCreated }) => {
-    const dispatch = useDispatch();
+const CreateProductModal: React.FC<Props> = ({ 
+    isOpen, 
+    defaultName, 
+    onClose, 
+    onCreated,
+    existingProduct,
+    isEditMode = false 
+}) => {
+    const dispatch = useDispatch<AppDispatch>();
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
-    const [name, setName] = useState(defaultName);
-    const [category, setCategory] = useState("");
-    const [price, setPrice] = useState(0);
-    const [quantity, setQuantity] = useState(1);
+    const [name, setName] = useState<string>("");
+    const [category, setCategory] = useState<string>("");
+    const [price, setPrice] = useState<number>(0);
+    const [quantity, setQuantity] = useState<number>(1);
 
-
+    // Reseta o modal quando fecha
+    useEffect(() => {
+        if (!isOpen) {
+            setIsSuccess(false);
+            setName("");
+            setCategory("");
+            setPrice(0);
+            setQuantity(1);
+        }
+    }, [isOpen]);
 
     useEffect(() => {
-        setName(defaultName);
-    }, [defaultName]);
+        if (isOpen) {
+            if (existingProduct && isEditMode) {
+                // Preenche com dados do produto existente
+                setName(existingProduct.name);
+                setCategory(existingProduct.category || "");
+                setPrice(existingProduct.price);
+                setQuantity(1);
+            } else {
+                setName(defaultName);
+                setCategory("");
+                setPrice(0);
+                setQuantity(1);
+            }
+        }
+    }, [isOpen, defaultName, existingProduct, isEditMode]);
 
     const handleConfirm = () => {
-        console.log('dados', name, category, price, quantity)
-        dispatch(addProductAndAddToCart({ name, category, price, quantity }));
+        dispatch(addProductAndAddToCart({ 
+            name, 
+            category, 
+            price, 
+            quantity 
+        }));
+        
         setIsSuccess(true);
         onCreated?.();
         setTimeout(() => {
             setIsSuccess(false);
             onClose();
         }, 2000);
-
-
     };
 
     if (!isOpen) return null;
@@ -60,7 +96,7 @@ const CreateProductModal: React.FC<Props> = ({ isOpen, defaultName, onClose, onC
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                zIndex: "1"
+                zIndex: 1
             }}
         >
             <motion.div
@@ -75,10 +111,20 @@ const CreateProductModal: React.FC<Props> = ({ isOpen, defaultName, onClose, onC
                 }}
             >
                 {isSuccess ? (
-                    <Lottie animationData={successAnimation} loop={false} />
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                        padding: "20px 0"
+                    }}>
+                        <div style={{ width: "150px", height: "150px" }}>
+                            <Lottie animationData={successAnimation} loop={false} />
+                        </div>
+                    </div>
                 ) : (
                     <>
-                        <h2>Criar Produto</h2>
+                        <h2>{isEditMode ? 'Editar e Adicionar ao Carrinho' : 'Criar Produto'}</h2>
                         <div style={{
                             display: "flex",
                             flexDirection: "column",
@@ -86,17 +132,15 @@ const CreateProductModal: React.FC<Props> = ({ isOpen, defaultName, onClose, onC
                         }}>
                             <Input label="Nome" value={name} onChange={setName} />
                             <Input label="Categoria" value={category} onChange={setCategory} />
-                            <Input label="Preço" type="number" value={price} onChange={(v) => setPrice(Number(v))} />
-                            <Input label="Quantidade" type="number" value={quantity} onChange={(v) => setQuantity(Number(v))} />
+                            <Input label="Preço" type="number" value={price.toString()} onChange={(v) => setPrice(Number(v))} />
+                            <Input label="Quantidade" type="number" value={quantity.toString()} onChange={(v) => setQuantity(Number(v))} />
                             <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
-                                <Button onClick={handleConfirm} variant="contained" onCanPlay={handleConfirm}>Confirmar</Button>
+                                <Button onClick={handleConfirm} variant="contained">Confirmar</Button>
                                 <Button onClick={onClose} variant="outlined">Cancelar</Button>
                             </div>
                         </div>
                     </>
                 )}
-
-
             </motion.div>
         </motion.div>
     );
