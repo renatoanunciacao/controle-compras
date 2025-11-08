@@ -1,12 +1,14 @@
 import { Button, Stack } from "@mui/material";
-import { useState } from "react";
+
 import Input from "../atoms/Input";
-import { useDispatch } from "react-redux";
-// ajuste o caminho conforme sua estrutura
 import toast from "react-hot-toast";
+import { useState } from "react";
+
+// ajuste o caminho conforme sua estrutura
+
 
 const FormProduct: React.FC = () => {
-    const dispatch = useDispatch();
+    
 
     const [name, setName] = useState<string>("");
     const [price, setPrice] = useState<number | string>("");

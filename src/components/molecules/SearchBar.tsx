@@ -1,11 +1,11 @@
+import type { AppDispatch, RootState } from "../../store";
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import CreateProductModal from "../organisms/CreateProductModal";
-import { motion } from "framer-motion";
-import type { RootState, AppDispatch } from "../../store";
 import type { Product } from "../../store/productsSlice";
 import { deleteProduct } from "../../store/productsSlice";
+import { motion } from "framer-motion";
 
 const SearchBar: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -152,11 +152,11 @@ const SearchBar: React.FC = () => {
                                     drag="x"
                                     dragConstraints={{ left: -200, right: 0 }}
                                     dragElastic={0.2}
-                                    onDrag={(e, info) => {
+                                    onDrag={(_, info) => {
                                         setDraggedItemId(product.id);
                                         setDragOffset(info.offset.x);
                                     }}
-                                    onDragEnd={(e, info) => handleDragEnd(product, info)}
+                                    onDragEnd={(_, info) => handleDragEnd(product, info)}
                                     onClick={() => {
                                         if (Math.abs(dragOffset) < 5) {
                                             handleSelectProduct(product);
