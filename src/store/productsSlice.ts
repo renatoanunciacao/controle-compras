@@ -7,6 +7,9 @@ export interface Product {
   category?: string;
   price: number;
   quantity: number;
+  weight?: number;
+  weightUnit?: "g" | "kg";
+  pricePerKilo?: number;
 }
 
 interface ProductsState {
@@ -14,6 +17,26 @@ interface ProductsState {
   cart: Product[];
   filteredItems: Product[];
   searchTerm: string;
+  categories: string[];
+}
+
+const PREDEFINED_CATEGORIES = ["Produto com Peso"];
+
+function loadCategories(): string[] {
+  try {
+    const stored = localStorage.getItem("customCategories");
+
+    if (stored) {
+      const custom = JSON.parse(stored);
+      const merged = [...PREDEFINED_CATEGORIES, ...custom];
+      const result = [...new Set(merged)];
+      return result;
+    }
+  } catch (e) {
+    console.error("❌ Erro ao carregar categorias:", e);
+  }
+
+  return [...PREDEFINED_CATEGORIES];
 }
 
 // Função segura para carregar arrays do localStorage
@@ -31,6 +54,7 @@ const initialState: ProductsState = {
   cart: loadFromLocalStorage("cart"),
   filteredItems: [],
   searchTerm: "",
+  categories: loadCategories(),
 };
 
 // Função auxiliar para filtrar itens
@@ -48,6 +72,16 @@ const productsSlice = createSlice({
       state.filteredItems = filterItems(state.items, state.searchTerm);
     },
 
+    addCategory: (state, action: PayloadAction<string>) => {
+      if (!state.categories.includes(action.payload)) {
+        state.categories.push(action.payload);
+        const customOnly = state.categories.filter(
+          (c) => !PREDEFINED_CATEGORIES.includes(c)
+        );
+        localStorage.setItem("customCategories", JSON.stringify(customOnly));
+      }
+    },
+
     addProductToCatalog: (state, action: PayloadAction<Omit<Product, "id">>) => {
       const newProduct: Product = { id: uuidv4(), ...action.payload };
       state.items.push(newProduct);
@@ -57,11 +91,17 @@ const productsSlice = createSlice({
 
     addProductAndAddToCart: (state, action: PayloadAction<Omit<Product, "id">>) => {
       const newProduct: Product = { id: uuidv4(), ...action.payload };
-      console.log('new', newProduct)
-      state.items.push(newProduct);
-      console.log("CART:", state.cart);
 
-       state.cart.push(newProduct);
+      if (newProduct.category && !state.categories.includes(newProduct.category)) {
+        state.categories.push(newProduct.category);
+        const customOnly = state.categories.filter(
+          (c) => !PREDEFINED_CATEGORIES.includes(c)
+        );
+        localStorage.setItem("customCategories", JSON.stringify(customOnly));
+      }
+
+      state.items.push(newProduct);
+      state.cart.push(newProduct);
       state.filteredItems = filterItems(state.items, state.searchTerm);
       localStorage.setItem("products", JSON.stringify(state.items));
       localStorage.setItem("cart", JSON.stringify(state.cart));
@@ -108,8 +148,15 @@ const productsSlice = createSlice({
   },
 });
 
+// Garantir que o estado inicial sempre tenha categorias
+if (initialState.categories.length === 0) {
+  initialState.categories = [...PREDEFINED_CATEGORIES];
+  console.warn("⚠️ Categorias vazias detectadas! Restaurando predefinidas.");
+}
+
 export const {
   setSearchTerm,
+  addCategory,
   addProductToCatalog,
   addProductAndAddToCart,
   addToCart,

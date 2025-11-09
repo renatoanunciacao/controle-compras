@@ -9,9 +9,6 @@ const ListProductsOrganism: React.FC = () => {
     const products = useSelector((state: RootState) => state.products.items);
     const [copied, setCopied] = useState(false);
 
-    console.log("ListProductsOrganism - Cart:", cart);
-    console.log("ListProductsOrganism - Cart length:", cart.length);
-
     const getProductDetails = (productId: string) => {
         return products.find(p => p.id === productId);
     };
