@@ -127,16 +127,18 @@ const SearchBar: React.FC = () => {
                         style={{
                             position: "absolute",
                             top: "100%",
-                            left: 0,
-                            right: 0,
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            width: "90%",
+                            maxWidth: "600px",
                             backgroundColor: "#fff",
                             border: "1px solid #ddd",
                             borderRadius: "8px",
                             marginTop: "4px",
-                            maxHeight: "300px",
+                            maxHeight: "400px",
                             overflowY: "auto",
                             zIndex: 10,
-                            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                         }}
                     >
                         {filteredProducts.map((product) => (
@@ -259,7 +261,8 @@ const SearchBar: React.FC = () => {
                                     color: "#007bff",
                                     fontWeight: "bold",
                                     backgroundColor: "#fff",
-                                    borderTop: "1px solid #f0f0f0"
+                                    borderTop: "1px solid #f0f0f0",
+                                    textAlign: "center"
                                 }}
                                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f5f5f5")}
                                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
@@ -276,20 +279,22 @@ const SearchBar: React.FC = () => {
                         style={{
                             position: "absolute",
                             top: "100%",
-                            left: 0,
-                            right: 0,
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            width: "90%",
+                            maxWidth: "600px",
                             backgroundColor: "#fff",
                             border: "1px solid #ddd",
                             borderRadius: "8px",
                             marginTop: "4px",
                             zIndex: 10,
-                            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                         }}
                     >
                         <div
                             onClick={handleCreateNew}
                             style={{
-                                padding: "12px",
+                                padding: "16px",
                                 cursor: "pointer",
                                 color: "#007bff",
                                 fontWeight: "bold",
